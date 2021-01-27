@@ -22,3 +22,22 @@
             writer.Close()
         End Using
     End Sub
+ Private Sub BtnLongProcess()
+        If RunWithTimeout(New ThreadStart(AddressOf LongRunningOperation), TimeSpan.FromMilliseconds(5000)) Then
+            Console.WriteLine("Worker thread finished.")
+        Else
+            Console.WriteLine("Worker thread was aborted.")
+        End If
+    End Sub
+
+    Private Shared Function RunWithTimeout(ByVal threadStart As ThreadStart, ByVal timeout As TimeSpan) As Boolean
+        Dim workerThread As Thread = New Thread(threadStart)
+        workerThread.Start()
+        Dim finished As Boolean = workerThread.Join(timeout)
+        If Not finished Then workerThread.Abort()
+        Return finished
+    End Function
+
+    Private Shared Sub LongRunningOperation()
+        Thread.Sleep(4000)
+    End Sub
