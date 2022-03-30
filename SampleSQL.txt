@@ -1,0 +1,14 @@
+
+-- SQL DB BACKUP using Query using Procedure
+create procedure sp_DBBACKUP
+as begin
+declare  @datetime nvarchar(20);
+declare @filename  nvarchar(1000);
+set @datetime =  format(getdate(),'yyyyMMddHHmmssffff');
+set @filename = 'E:\810192\DEVELOPMENT\TestCode\DBBackups\' + @datetime + '.bak'
+BACKUP DATABASE TEST2021
+TO DISK =  @filename;
+end
+
+-- Executing Procedure
+exec sp_DBBACKUP
